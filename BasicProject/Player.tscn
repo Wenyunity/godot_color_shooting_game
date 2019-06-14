@@ -1,0 +1,43 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=1]
+[ext_resource path="res://Blue.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Green.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Red.tscn" type="PackedScene" id=4]
+[ext_resource path="res://player1.png" type="Texture" id=5]
+[ext_resource path="res://player2.png" type="Texture" id=6]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 5 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "basic",
+"speed": 3.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+
+[node name="Player" type="Area2D"]
+position = Vector2( 0.122086, -2.07547 )
+collision_mask = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+Blue = ExtResource( 2 )
+Green = ExtResource( 3 )
+Red = ExtResource( 4 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -5.5, 0 )
+rotation = 1.5708
+scale = Vector2( 0.4, 0.4 )
+frames = SubResource( 1 )
+animation = "basic"
+frame = 1
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2( 2.2, 2.2 )
+shape = SubResource( 2 )
+[connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
