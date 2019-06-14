@@ -8,7 +8,9 @@ Current Progress: Bullets collide with enemies but bounce off of them.
 # Controls
 
 Up/Down: Moves up and down respectively.
+
 Left/Right: Rotates CCW/CW respectively.
+
 Z/X/C: Fires Red, Green, and Blue bullets respectively.
 
 # To Be Added
