@@ -1,2 +1,3 @@
 # godot_color_shooting_game
-Shoot Colors
+
+Current Progress: Not Done
