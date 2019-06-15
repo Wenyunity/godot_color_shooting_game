@@ -3,6 +3,8 @@ extends RigidBody2D
 var color_mob_types = ["Red", "Green", "Blue"]
 var color_of_mob
 
+signal addScore
+
 export var min_speed = 150  # Minimum speed range.
 export var max_speed = 250  # Maximum speed range.
 
@@ -27,6 +29,7 @@ func _ready():
 #	pass
 
 func _on_Visibility_screen_exited():
+	emit_signal("addScore")
 	queue_free()
 
 func _on_start_game():
