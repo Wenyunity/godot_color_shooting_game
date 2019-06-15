@@ -1,6 +1,8 @@
 extends RigidBody2D
 
+# Three different colors
 var color_mob_types = ["Red", "Green", "Blue"]
+# Color of current mob
 var color_of_mob
 
 signal addScore
@@ -24,13 +26,11 @@ func _ready():
 		$CollisionBlue.disabled = false
 		set_collision_layer_bit(4, true)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
+# When the mob goes offscreen
 func _on_Visibility_screen_exited():
 	emit_signal("addScore")
 	queue_free()
 
-func _on_start_game():
+# When game is over
+func _on_gameOver():
 	queue_free()

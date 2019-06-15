@@ -1,10 +1,7 @@
 extends CanvasLayer
 
+# When start game is pressed
 signal start_game
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -15,10 +12,6 @@ func show_message(text):
 	$MessageLabel.text = text
 	$MessageLabel.show()
 	$MessageTimer.start()
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 
 # Shows game over message
 func show_game_over():
@@ -32,6 +25,10 @@ func show_game_over():
 # Updates score
 func update_score(score):
 	$ScoreLabel.text = str(score)
+
+# Updates lives
+func update_lives(lives):
+	$LifeLabel.text = str(lives)
 
 # When the start button is pressed
 # Starts game

@@ -51,6 +51,19 @@ custom_fonts/font = SubResource( 2 )
 text = "0"
 align = 1
 
+[node name="LifeLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -238.837
+margin_top = 282.659
+margin_right = 241.163
+margin_bottom = 360.659
+custom_fonts/font = SubResource( 2 )
+text = "3"
+align = 1
+
 [node name="StartButton" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 1.0
