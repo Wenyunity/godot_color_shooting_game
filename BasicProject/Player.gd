@@ -5,6 +5,14 @@ export (PackedScene) var Blue
 export (PackedScene) var Green
 export (PackedScene) var Red
 
+var red_firable
+var blue_firable
+var green_firable
+
+var num_cooldown
+
+var COOLDOWN_PENALTY = 0.1
+
 signal hit
 signal offsetUp
 signal offsetDown
@@ -45,48 +53,26 @@ func _process(delta):
 			emit_signal("offsetDownOff")
 		if Input.is_action_just_released("ui_up"):
 			emit_signal("offsetUpOff")
-		if Input.is_action_just_pressed("ui_accept"):
-			fire_bullet(Red)
-		if Input.is_action_just_pressed("ui_cancel"):
-			fire_bullet(Blue)
-		if Input.is_action_just_pressed("ui_select"):
-			fire_bullet(Green)
+		if Input.is_action_pressed("ui_accept"):
+			if red_firable:
+				fire_bullet(Red)
+				num_cooldown += COOLDOWN_PENALTY
+				$RedTime.start(num_cooldown)
+				red_firable = false
+		if Input.is_action_pressed("ui_cancel"):
+			if blue_firable:
+				fire_bullet(Blue)
+				num_cooldown += COOLDOWN_PENALTY
+				$BlueTime.start(num_cooldown)
+				blue_firable = false
+		if Input.is_action_pressed("ui_select"):
+			if green_firable:
+				fire_bullet(Green)
+				num_cooldown += COOLDOWN_PENALTY
+				$GreenTime.start(num_cooldown)
+				green_firable = false
 
-# Old Process
-func _old_process(delta):
-	# If visible, so not shooting when dead
-	if visible:
-		# Then do this stuff
-		var velocity = Vector2()  # The player's movement vector.
-		if Input.is_action_pressed("ui_right"):
-			rotation_degrees += 5
-		if Input.is_action_pressed("ui_left"):
-			rotation_degrees -= 5
-		if Input.is_action_pressed("ui_down"):
-			velocity.y += 1
-		if Input.is_action_pressed("ui_up"):
-			velocity.y -= 1
-		if Input.is_action_just_pressed("ui_accept"):
-			fire_bullet(Red)
-		if Input.is_action_just_pressed("ui_cancel"):
-			fire_bullet(Blue)
-		if Input.is_action_just_pressed("ui_select"):
-			fire_bullet(Green)
-		
-		## Movement and clamping
-		position += velocity * delta * speed
-		position.x = clamp(position.x, 0, screen_size.x)
-		position.y = clamp(position.y, 0, screen_size.y)
-	
-	## Sprite Rotation
-#	if velocity.x != 0:
-#		$AnimatedSprite.animation = "right"
-#		$AnimatedSprite.flip_v = false
-#		# See the note below about boolean assignment
-#		$AnimatedSprite.flip_h = velocity.x < 0
-#	elif velocity.y != 0:
-#		$AnimatedSprite.animation = "up"
-#		$AnimatedSprite.flip_v = velocity.y > 0
+
 
 # Fires bullet
 func fire_bullet(bullet):
@@ -103,11 +89,30 @@ func fire_bullet(bullet):
 
 ## Function called on game start
 func start():
-    show()
-    $CollisionShape2D.disabled = false
+	show()
+	red_firable = true
+	green_firable = true
+	blue_firable = true
+	num_cooldown = 0
+	$CollisionShape2D.disabled = false
 
 ## Function called when hit
 func _on_Player_body_entered(body):
 	hide()  # Player disappears after being hit.
 	emit_signal("hit")
 	$CollisionShape2D.set_deferred("disabled", true)
+
+
+func _on_RedTime_timeout():
+	red_firable = true
+	num_cooldown -= COOLDOWN_PENALTY
+
+
+func _on_BlueTime_timeout():
+	blue_firable = true
+	num_cooldown -= COOLDOWN_PENALTY
+
+
+func _on_GreenTime_timeout():
+	green_firable = true
+	num_cooldown -= COOLDOWN_PENALTY
