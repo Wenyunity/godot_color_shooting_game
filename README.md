@@ -3,6 +3,8 @@
 This game is a basic shooter. The player can only move up and down along the grey shape and can rotate.
 Enemies are assigned one of three colors and can only be attacked by a bullet matching that color.
 
+If an enemy goes offscreen, one point is awarded to the player.
+
 Current Progress: Bullets collide with enemies but bounce off of them.
 
 # Controls
