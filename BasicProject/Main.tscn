@@ -1,11 +1,17 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://ColorMob.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://HUD.tscn" type="PackedScene" id=4]
+[ext_resource path="res://PathFollow2D.gd" type="Script" id=3]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=5]
 
-[sub_resource type="Curve2D" id=1]
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -77.7154, 387.853, 0, 0, 0, 0, -76.6628, 124.694, 0, 0, 0, 0, 91.7585, 131.01, 0, 0, 0, 0, 92.8112, -135.306 )
+}
+
+[sub_resource type="Curve2D" id=2]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 0.0247383, 0.160891, 0, 0, 0, 0, 479.979, -0.0280476, 0, 0, 0, 0, 480.128, 720.354, 0, 0, 0, 0, 0.00634003, 720.156, 0, 0, 0, 0, 0.08004, -0.0390778, 0, 0, 0, 0, 0.0247383, 0.160891 )
 }
@@ -22,19 +28,45 @@ margin_bottom = 723.971
 color = Color( 0, 0, 0, 1 )
 
 [node name="ColorRect2" type="ColorRect" parent="."]
-margin_left = 218.0
-margin_top = -19.0
-margin_right = 258.0
-margin_bottom = 792.0
+margin_left = 135.0
+margin_top = 342.0
+margin_right = 352.0
+margin_bottom = 386.0
+rect_pivot_offset = Vector2( 71.83, 131.297 )
 color = Color( 0.352941, 0.352941, 0.352941, 1 )
 
-[node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 238.425, 287.388 )
+[node name="ColorRect3" type="ColorRect" parent="."]
+margin_left = 135.0
+margin_top = 343.0
+margin_right = 175.0
+margin_bottom = 636.0
+rect_pivot_offset = Vector2( 71.83, 131.297 )
+color = Color( 0.352941, 0.352941, 0.352941, 1 )
+
+[node name="ColorRect4" type="ColorRect" parent="."]
+margin_left = 310.0
+margin_top = 84.0
+margin_right = 350.0
+margin_bottom = 387.0
+rect_pivot_offset = Vector2( 71.83, 131.297 )
+color = Color( 0.352941, 0.352941, 0.352941, 1 )
+
+[node name="Path2D" type="Path2D" parent="."]
+position = Vector2( 234.663, 235.99 )
+curve = SubResource( 3 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+position = Vector2( -77.7154, 387.853 )
+rotate = false
+loop = false
+script = ExtResource( 3 )
+
+[node name="Player" parent="Path2D/PathFollow2D" instance=ExtResource( 4 )]
+position = Vector2( 0, 0 )
+scale = Vector2( 1, 1 )
 
 [node name="StartPosition" type="Position2D" parent="."]
-position = Vector2( 240, 283 )
-
-[node name="ScoreTimer" type="Timer" parent="."]
+position = Vector2( 234.029, 287.644 )
 
 [node name="MobTimer" type="Timer" parent="."]
 
@@ -42,15 +74,19 @@ position = Vector2( 240, 283 )
 one_shot = true
 
 [node name="MobSpawn" type="Path2D" parent="."]
-curve = SubResource( 1 )
+curve = SubResource( 2 )
 
 [node name="SpawnLocation" type="PathFollow2D" parent="MobSpawn"]
 position = Vector2( 0.0247383, 0.160891 )
 rotation = -0.000393658
 
-[node name="HUD" parent="." instance=ExtResource( 4 )]
-[connection signal="hit" from="Player" to="." method="game_over"]
-[connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]
+[node name="HUD" parent="." instance=ExtResource( 5 )]
+[connection signal="hit" from="Path2D/PathFollow2D/Player" to="." method="game_over"]
+[connection signal="offsetDown" from="Path2D/PathFollow2D/Player" to="Path2D/PathFollow2D" method="_on_Player_offsetDown"]
+[connection signal="offsetDownOff" from="Path2D/PathFollow2D/Player" to="Path2D/PathFollow2D" method="_on_Player_offsetDownOff"]
+[connection signal="offsetUp" from="Path2D/PathFollow2D/Player" to="Path2D/PathFollow2D" method="_on_Player_offsetUp"]
+[connection signal="offsetUpOff" from="Path2D/PathFollow2D/Player" to="Path2D/PathFollow2D" method="_on_Player_offsetUpOff"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="start_game" from="HUD" to="Path2D/PathFollow2D" method="_on_HUD_start_game"]
 [connection signal="start_game" from="HUD" to="." method="new_game"]

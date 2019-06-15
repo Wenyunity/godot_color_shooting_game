@@ -19,7 +19,6 @@ func _ready():
 #	pass
 
 func game_over():
-	$ScoreTimer.stop()
 	$MobTimer.stop()
 	$HUD.show_game_over()
 
@@ -27,17 +26,16 @@ func new_game():
 	score = 0
 	$HUD.update_score(score)
 	$HUD.show_message("Get Ready")
-	$Player.start($StartPosition.position)
+	$Path2D/PathFollow2D/Player.start()
 	$StartTimer.start()
 
 
 func _on_StartTimer_timeout():
 	$MobTimer.wait_time = 1
 	$MobTimer.start()
-	$ScoreTimer.start()
 
 
-func _on_ScoreTimer_timeout():
+func _on_addScore():
 	score += 1
 	$HUD.update_score(score)
 
@@ -61,4 +59,6 @@ func _on_MobTimer_timeout():
 	$HUD.connect("start_game", mob, "_on_start_game")
 	# Lowers Mob Timer
 	$MobTimer.wait_time = max(MIN_TIME_BETWEEN_SPAWN, $MobTimer.wait_time * MOB_TIME_FACTOR)
-	
+	mob.connect("addScore", self, "_on_addScore")
+
+

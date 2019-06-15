@@ -6,6 +6,10 @@ export (PackedScene) var Green
 export (PackedScene) var Red
 
 signal hit
+signal offsetUp
+signal offsetDown
+signal offsetUpOff
+signal offsetDownOff
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -28,6 +32,28 @@ func _ready():
 
 # Acts every frame
 func _process(delta):
+	if visible:
+		if Input.is_action_pressed("ui_right"):
+			rotation_degrees += 5
+		if Input.is_action_pressed("ui_left"):
+			rotation_degrees -= 5
+		if Input.is_action_just_pressed("ui_down"):
+			emit_signal("offsetDown")
+		if Input.is_action_just_pressed("ui_up"):
+			emit_signal("offsetUp")
+		if Input.is_action_just_released("ui_down"):
+			emit_signal("offsetDownOff")
+		if Input.is_action_just_released("ui_up"):
+			emit_signal("offsetUpOff")
+		if Input.is_action_just_pressed("ui_accept"):
+			fire_bullet(Red)
+		if Input.is_action_just_pressed("ui_cancel"):
+			fire_bullet(Blue)
+		if Input.is_action_just_pressed("ui_select"):
+			fire_bullet(Green)
+
+# Old Process
+func _old_process(delta):
 	# If visible, so not shooting when dead
 	if visible:
 		# Then do this stuff
@@ -66,18 +92,17 @@ func _process(delta):
 func fire_bullet(bullet):
 	# Create a bullet instance and add it to the scene.
 	var spawn = bullet.instance()
-	get_parent().add_child(spawn)
+	get_tree().root.add_child(spawn)
 	# Set the bullet's direction the same as the player's
-	spawn.rotation = rotation
+	spawn.rotation = global_rotation
 	# Set the mob's position to the player's.
-	spawn.position = position
+	spawn.position = global_position
 	# Set the velocity (speed & direction).
 	spawn.linear_velocity = Vector2(BULLET_SPEED, 0)
-	spawn.linear_velocity = spawn.linear_velocity.rotated(rotation)
+	spawn.linear_velocity = spawn.linear_velocity.rotated(global_rotation)
 
 ## Function called on game start
-func start(pos):
-    position = pos
+func start():
     show()
     $CollisionShape2D.disabled = false
 
