@@ -19,6 +19,7 @@ Z/X/C: Hold down to fire Red, Green, and Blue bullets respectively.
 
 - Enemies that have multiple colors.
 - Multiple levels with different paths.
+- Life system for the player.
 
 # Updates
 
